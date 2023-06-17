@@ -1,3 +1,13 @@
-import helloworld from './lib/helloworld.js';
+import kebabcaseKeys from 'kebabcase-keys';
 
-console.log(helloworld('fugafuga'));
+const result = kebabcaseKeys({
+	foo_bar: 'baz',
+	nested: { fooBaz: 'bar', arrayKey: ['123'], arrayJson: [{ testTest: 'test' }] }
+});
+console.log(result['foo-bar']);
+
+const result2 = kebabcaseKeys([
+	{ foo_bar: 'baz' },
+	{ nested: { fooBaz: 'bar', arrayKey: ['123'], arrayJson: [{ testTest: 'test' }] } }
+]);
+console.log(result2[0]?.['foo-bar']);

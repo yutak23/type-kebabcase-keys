@@ -25,7 +25,8 @@
 		"moduleResolution": "node16",
 		"outDir": "./build",
 		"declaration": true,
-		"sourceMap": true
+		"sourceMap": true,
+		"typeRoots": ["./srv/types", "./node_modules/@types"]
 	},
 	"include": ["srv/**/*.ts"],
 	"exclude": ["node_modules", "build"]
