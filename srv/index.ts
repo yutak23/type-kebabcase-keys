@@ -37,8 +37,27 @@ const result = kebabcaseKeys({
 console.log(result['foo-bar']);
 console.log(result['point-test'].x);
 
-const result2 = kebabcaseKeys([
-	{ foo_bar: new Date() },
+const result2 = kebabcaseKeys(
+	[
+		{ foo_bar: new Date() },
+		{
+			nested: {
+				fooBaz: new Date(),
+				hoge_hoge: new Error(''),
+				arrayKey: ['123'],
+				arrayJson: [{ testTest: new Date() }],
+				person_test: person,
+				point_test: p1
+			}
+		}
+	],
+	{ deep: true }
+);
+console.log(result2[0]?.['foo-bar']);
+console.log(result2[0]?.nested?.['array-json'][0]?.['test-test'].getDate());
+console.log(result2[0]?.nested?.['point-test'].x);
+
+const result3 = kebabcaseKeys(
 	{
 		nested: {
 			fooBaz: new Date(),
@@ -48,8 +67,7 @@ const result2 = kebabcaseKeys([
 			person_test: person,
 			point_test: p1
 		}
-	}
-]);
-console.log(result2[0]?.['foo-bar']);
-console.log(result2[0]?.nested?.['array-json'][0]?.['test-test'].getDate());
-console.log(result2[0]?.nested?.['point-test'].x);
+	},
+	{ deep: false } // 省略しても同じ結果になる
+);
+console.log(result3.nested.fooBaz.getDate());

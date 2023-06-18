@@ -21,22 +21,24 @@ declare module 'kebabcase-keys' {
 		readonly exclude?: ReadonlyArray<string | RegExp>;
 	};
 
-	type KebabCasedProperties<T> = T extends readonly CustomJsonObject[]
+	type KebabCasedProperties<T, Deep extends boolean = false> = T extends readonly CustomJsonObject[]
 		? {
-				[Key in keyof T]: KebabCasedProperties<T[Key]>;
+				[Key in keyof T]: KebabCasedProperties<T[Key], Deep>;
 		  }
 		: T extends CustomJsonObject
 		? {
 				[Key in keyof T as KebabCase<Key>]: T[Key] extends CustomJsonObject | CustomJsonObject[]
-					? KebabCasedProperties<T[Key]>
+					? [Deep] extends [true]
+						? KebabCasedProperties<T[Key], Deep>
+						: T[Key]
 					: T[Key];
 		  }
 		: T;
 
-	declare function kebabcaseKeys<T extends CustomJsonObject | CustomJsonObject[]>(
-		input: T,
-		options?: Options
-	): KebabCasedProperties<T>;
+	declare function kebabcaseKeys<
+		T extends CustomJsonObject | CustomJsonObject[],
+		OptionsType extends Options
+	>(input: T, options?: OptionsType): KebabCasedProperties<T, OptionsType['deep']>;
 
 	export = kebabcaseKeys;
 }
