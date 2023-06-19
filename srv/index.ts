@@ -45,7 +45,7 @@ const result = kebabcaseKeys(
 		test_test_test: new Date(), // snake_case
 		nested: {
 			fooBar: new Date(),
-			'kebabu-case': '' // kebab-case
+			'kebabu-case': 'kebabu-case' // kebab-case
 		}
 	},
 	{ deep: true }
@@ -64,7 +64,7 @@ const result2 = kebabcaseKeys(
 	{ exclude: ['fooBar'] }
 );
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-console.log((result2 as any).foo_bar);
+console.log((result2 as any).fooBar);
 console.log(result2['point-test'].x);
 
 const result3 = kebabcaseKeys(
@@ -84,8 +84,11 @@ const result3 = kebabcaseKeys(
 	{ deep: true }
 );
 console.log(result3[0]?.['foo-bar']);
-console.log(result3[0]?.nested?.['array-json'][0]?.['test-test'].getDate());
-console.log(result3[0]?.nested?.['point-test'].x);
+console.log(
+	"result3[1]?.nested?.['array-json'][0]?.['test-test'].getDate()",
+	result3[1]?.nested?.['array-json'][0]?.['test-test'].getDate()
+);
+console.log("result3[0]?.nested?.['point-test'].x", result3[1]?.nested?.['point-test'].y);
 
 const result4 = kebabcaseKeys(
 	{
