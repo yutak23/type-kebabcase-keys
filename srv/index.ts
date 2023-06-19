@@ -28,13 +28,17 @@ const person: Person = {
 	age: 30
 };
 
-const result = kebabcaseKeys({
-	foo_bar: new Date(),
-	hoge_hoge: new Error(''),
-	person_test: person,
-	point_test: p1
-});
-console.log(result['foo-bar']);
+const result = kebabcaseKeys(
+	{
+		fooBar: new Date(),
+		hoge_hoge: new Error(''),
+		person_test: person,
+		point_test: p1
+	},
+	{ exclude: ['fooBar'] }
+);
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+console.log((result as any).foo_bar);
 console.log(result['point-test'].x);
 
 const result2 = kebabcaseKeys(
