@@ -7,7 +7,14 @@ declare module 'kebabcase-keys' {
 	type CustomJsonValue = JsonPrimitive | object | CustomJsonObject | CustomJsonArray;
 	type CustomJsonArray = CustomJsonValue[] | readonly CustomJsonValue[];
 
-	type Options = {
+	/**
+	 * Return a default type if input type is nil.
+	 * @template T - Input type.
+	 * @template U - Default type.
+	 */
+	type WithDefault<T, U extends T> = T extends undefined | null ? U : T;
+
+	interface Options {
 		/**
 		 * Recurse nested objects and objects in arrays.
 		 * @default false
@@ -19,7 +26,7 @@ declare module 'kebabcase-keys' {
 		 * @default []
 		 */
 		readonly exclude?: ReadonlyArray<string | RegExp>;
-	};
+	}
 
 	type KebabCasedProperties<T, Deep extends boolean = false> = T extends readonly CustomJsonObject[]
 		? {
@@ -28,17 +35,25 @@ declare module 'kebabcase-keys' {
 		: T extends CustomJsonObject
 		? {
 				[Key in keyof T as KebabCase<Key>]: T[Key] extends CustomJsonObject | CustomJsonObject[]
-					? [Deep] extends [true]
+					? Deep[] extends Array<true>
 						? KebabCasedProperties<T[Key], Deep>
 						: T[Key]
 					: T[Key];
 		  }
 		: T;
 
+	/**
+	 * Convert object keys to kebabcase.
+	 * @param input - Object or array of objects to snake-case.
+	 * @param options - Options of conversion.
+	 */
 	declare function kebabcaseKeys<
 		T extends CustomJsonObject | CustomJsonObject[],
 		OptionsType extends Options
-	>(input: T, options?: OptionsType): KebabCasedProperties<T, OptionsType['deep']>;
+	>(
+		input: T,
+		options?: OptionsType
+	): KebabCasedProperties<T, WithDefault<OptionsType['deep'], false>>;
 
 	export = kebabcaseKeys;
 }
