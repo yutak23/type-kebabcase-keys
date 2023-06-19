@@ -30,6 +30,7 @@ const person: Person = {
 
 const result = kebabcaseKeys(
 	{
+		'space space': new Date(), // space space
 		fooBar: new Date(), // camelCase(2 words)
 		fooBarBar: new Date(), // camelCase(3 words)
 		HogeBarBar: new Date(), // PascalCase(3 words)
