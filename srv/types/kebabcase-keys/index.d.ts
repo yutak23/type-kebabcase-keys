@@ -34,15 +34,21 @@ declare module 'kebabcase-keys' {
 		? PascalToKebab<S>
 		: CamelToKebab<S>;
 
+	type KebabCase<S extends string | number | symbol> = S extends number
+		? `${S}`
+		: S extends symbol
+		? never
+		: S extends string
+		? AnyCaseToKebab<S>
+		: S;
+
 	type KebabCasedProperties<T, Deep extends boolean = false> = T extends readonly CustomJsonObject[]
 		? {
 				[Key in keyof T]: KebabCasedProperties<T[Key], Deep>;
 		  }
 		: T extends CustomJsonObject
 		? {
-				[Key in keyof T as AnyCaseToKebab<Key>]: T[Key] extends
-					| CustomJsonObject
-					| CustomJsonObject[]
+				[Key in keyof T as KebabCase<Key>]: T[Key] extends CustomJsonObject | CustomJsonObject[]
 					? Deep[] extends Array<true>
 						? KebabCasedProperties<T[Key], Deep>
 						: T[Key]
@@ -79,7 +85,7 @@ declare module 'kebabcase-keys' {
 
 	export = kebabcaseKeys;
 
-	// Extended versions of https://github.com/sindresorhus/type-fest/tree/main#json
+	// Extended versions of https://github.com/sindresorhus/type-fest#json
 	type CustomJsonObject = { [Key in string]: CustomJsonValue } & {
 		[Key in string]?: CustomJsonValue | undefined;
 	};
@@ -89,9 +95,7 @@ declare module 'kebabcase-keys' {
 	// based on https://github.com/DefinitelyTyped/DefinitelyTyped/pull/59806#pullrequestreview-942584759
 	// Copied from https://github.com/sindresorhus/type-fest
 	type JsonPrimitive = string | number | boolean | null;
-
 	type WordSeparators = '-' | '_' | Whitespace;
-
 	type Whitespace =
 		| '\u{9}' // '\t'
 		| '\u{A}' // '\n'
@@ -119,32 +123,4 @@ declare module 'kebabcase-keys' {
 		| '\u{205F}'
 		| '\u{3000}'
 		| '\u{FEFF}';
-
-	type UpperCaseCharacters =
-		| 'A'
-		| 'B'
-		| 'C'
-		| 'D'
-		| 'E'
-		| 'F'
-		| 'G'
-		| 'H'
-		| 'I'
-		| 'J'
-		| 'K'
-		| 'L'
-		| 'M'
-		| 'N'
-		| 'O'
-		| 'P'
-		| 'Q'
-		| 'R'
-		| 'S'
-		| 'T'
-		| 'U'
-		| 'V'
-		| 'W'
-		| 'X'
-		| 'Y'
-		| 'Z';
 }

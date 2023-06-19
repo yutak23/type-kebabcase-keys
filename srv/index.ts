@@ -27,9 +27,12 @@ const person: Person = {
 	name: 'John',
 	age: 30
 };
+const symbol = Symbol('foo');
 
 const result = kebabcaseKeys(
 	{
+		123: 123, // number,
+		[symbol]: 'symbol', // symbol
 		'space space': new Date(), // space space
 		fooBar: new Date(), // camelCase(2 words)
 		fooBarBar: new Date(), // camelCase(3 words)
