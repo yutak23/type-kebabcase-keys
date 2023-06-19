@@ -30,6 +30,28 @@ const person: Person = {
 
 const result = kebabcaseKeys(
 	{
+		fooBar: new Date(), // camelCase(2 words)
+		fooBarBar: new Date(), // camelCase(3 words)
+		HogeBarBar: new Date(), // PascalCase(3 words)
+		Hogehogehoge: new Date(), // Capitalize
+		UPPERCASE: new Date(), // UPPERCASE
+		testtesttest: new Date(), // lowercase
+		foo_Foo_Foo: new Date(), // snake_case
+		xxx_YYY_ZZZ: new Date(), // snake_case
+		test_test_test: new Date(), // snake_case
+		nested: {
+			fooBar: new Date(),
+			'kebabu-case': '' // kebab-case
+		}
+	},
+	{ deep: true }
+);
+console.log(result['foo-bar']);
+console.log(result.nested['kebabu-case']);
+console.log(result.nested['foo-bar']);
+
+const result2 = kebabcaseKeys(
+	{
 		fooBar: new Date(),
 		hoge_hoge: new Error(''),
 		person_test: person,
@@ -38,10 +60,10 @@ const result = kebabcaseKeys(
 	{ exclude: ['fooBar'] }
 );
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-console.log((result as any).foo_bar);
-console.log(result['point-test'].x);
+console.log((result2 as any).foo_bar);
+console.log(result2['point-test'].x);
 
-const result2 = kebabcaseKeys(
+const result3 = kebabcaseKeys(
 	[
 		{ foo_bar: new Date() },
 		{
@@ -57,11 +79,11 @@ const result2 = kebabcaseKeys(
 	],
 	{ deep: true }
 );
-console.log(result2[0]?.['foo-bar']);
-console.log(result2[0]?.nested?.['array-json'][0]?.['test-test'].getDate());
-console.log(result2[0]?.nested?.['point-test'].x);
+console.log(result3[0]?.['foo-bar']);
+console.log(result3[0]?.nested?.['array-json'][0]?.['test-test'].getDate());
+console.log(result3[0]?.nested?.['point-test'].x);
 
-const result3 = kebabcaseKeys(
+const result4 = kebabcaseKeys(
 	{
 		nested: {
 			fooBaz: new Date(),
@@ -74,4 +96,4 @@ const result3 = kebabcaseKeys(
 	},
 	{ deep: false } // 省略しても同じ結果になる
 );
-console.log(result3.nested.fooBaz.getDate());
+console.log(result4.nested.fooBaz.getDate());
