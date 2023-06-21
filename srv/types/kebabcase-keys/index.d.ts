@@ -1,11 +1,4 @@
 declare module 'kebabcase-keys' {
-	/**
-	 * Return a default type if input type is nil.
-	 * @template T - Input type.
-	 * @template U - Default type.
-	 */
-	type WithDefault<T, U extends T> = T extends undefined | null ? U : T;
-
 	type CamelToKebab<S extends string> = S extends `${infer T}${infer U}`
 		? `${T extends Capitalize<T> ? '-' : ''}${Lowercase<T>}${CamelToKebab<U>}`
 		: S;
@@ -42,7 +35,10 @@ declare module 'kebabcase-keys' {
 		? AnyCaseToKebab<S>
 		: S;
 
-	type KebabCasedProperties<T, Deep extends boolean = false> = T extends readonly CustomJsonObject[]
+	type KebabCasedProperties<
+		T,
+		Deep extends boolean | undefined = false
+	> = T extends readonly CustomJsonObject[]
 		? {
 				[Key in keyof T]: KebabCasedProperties<T[Key], Deep>;
 		  }
@@ -78,10 +74,7 @@ declare module 'kebabcase-keys' {
 	declare function kebabcaseKeys<
 		T extends CustomJsonObject | CustomJsonObject[],
 		OptionsType extends Options
-	>(
-		input: T,
-		options?: OptionsType
-	): KebabCasedProperties<T, WithDefault<OptionsType['deep'], false>>;
+	>(input: T, options?: OptionsType): KebabCasedProperties<T, OptionsType['deep']>;
 
 	export = kebabcaseKeys;
 
