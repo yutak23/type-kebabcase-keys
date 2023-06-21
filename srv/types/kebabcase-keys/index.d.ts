@@ -44,7 +44,7 @@ declare module 'kebabcase-keys' {
 
 	type KebabCasedProperties<
 		T,
-		Deep extends boolean | undefined,
+		Deep extends boolean,
 		Exclude extends ReadonlyArray<string | RegExp>
 	> = T extends readonly CustomJsonObject[]
 		? {
