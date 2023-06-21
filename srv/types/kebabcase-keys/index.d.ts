@@ -1,4 +1,11 @@
 declare module 'kebabcase-keys' {
+	/**
+	 * Return a default type if input type is nil.
+	 * @template T - Input type.
+	 * @template U - Default type.
+	 */
+	type WithDefault<T, U> = T extends undefined ? U : T;
+
 	type CamelToKebab<S extends string> = S extends `${infer T}${infer U}`
 		? `${T extends Capitalize<T> ? '-' : ''}${Lowercase<T>}${CamelToKebab<U>}`
 		: S;
@@ -37,16 +44,19 @@ declare module 'kebabcase-keys' {
 
 	type KebabCasedProperties<
 		T,
-		Deep extends boolean | undefined = false
+		Deep extends boolean | undefined,
+		Exclude extends ReadonlyArray<string | RegExp>
 	> = T extends readonly CustomJsonObject[]
 		? {
-				[Key in keyof T]: KebabCasedProperties<T[Key], Deep>;
+				[Key in keyof T]: KebabCasedProperties<T[Key], Deep, Exclude>;
 		  }
 		: T extends CustomJsonObject
 		? {
-				[Key in keyof T as KebabCase<Key>]: T[Key] extends CustomJsonObject | CustomJsonObject[]
+				[Key in keyof T as Array<Includes<Exclude, Key>> extends Array<true>
+					? Key
+					: KebabCase<Key>]: T[Key] extends CustomJsonObject | CustomJsonObject[]
 					? Deep[] extends Array<true>
-						? KebabCasedProperties<T[Key], Deep>
+						? KebabCasedProperties<T[Key], Deep, Exclude>
 						: T[Key]
 					: T[Key];
 		  }
@@ -74,7 +84,14 @@ declare module 'kebabcase-keys' {
 	declare function kebabcaseKeys<
 		T extends CustomJsonObject | CustomJsonObject[],
 		OptionsType extends Options
-	>(input: T, options?: OptionsType): KebabCasedProperties<T, OptionsType['deep']>;
+	>(
+		input: T,
+		options?: OptionsType
+	): KebabCasedProperties<
+		T,
+		WithDefault<OptionsType['deep'], false>,
+		WithDefault<OptionsType['exclude'], []>
+	>;
 
 	export = kebabcaseKeys;
 
@@ -116,4 +133,13 @@ declare module 'kebabcase-keys' {
 		| '\u{205F}'
 		| '\u{3000}'
 		| '\u{FEFF}';
+	type IsEqual<A, B> = A[] extends B[] ? (B[] extends A[] ? true : false) : false;
+	type Includes<Value extends readonly any[], Item> = Value extends readonly [
+		Value[0],
+		...infer rest
+	]
+		? IsEqual<Value[0], Item> extends true
+			? true
+			: Includes<rest, Item>
+		: false;
 }

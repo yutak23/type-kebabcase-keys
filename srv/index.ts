@@ -61,10 +61,9 @@ const result2 = kebabcaseKeys(
 		person_test: person,
 		point_test: p1
 	},
-	{ exclude: ['fooBar'] }
+	{ exclude: ['fooBar'] as const }
 );
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-console.log((result2 as any).fooBar);
+console.log(result2.fooBar);
 console.log(result2['point-test'].x);
 
 const result3 = kebabcaseKeys(
