@@ -18,7 +18,7 @@
 		"checkJs": true,
 
 		"esModuleInterop": true,
-		"skipLibCheck": true,
+		"skipLibCheck": false, // 型定義ファイルのチェックをスキップするどうか
 		"forceConsistentCasingInFileNames": true,
 		// temporary "@tsconfig/strictest/tsconfig.json" options end
 
